@@ -17,7 +17,8 @@ def home():
 
 @app.route('/user-create')
 def show_form():
-    return render_template('user-create.html')
+    user = User
+    return render_template('user-create.html', user=user)
 
 @app.route('/user-edit/<int:id>')
 def edit_user_page(id):
