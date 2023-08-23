@@ -1,0 +1,5 @@
+.remove-link {
+    color: #d9534f; /* Red color */
+    text-decoration: none;
+    cursor: pointer;
+}

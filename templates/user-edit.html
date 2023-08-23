@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit User</title>
+  </head>
+  <body>
+    <h1>Edit User</h1>
+    <form
+      method="POST"
+      action="/edit-complete/{{ user.id }}"
+      enctype="multipart/form-data"
+    >
+      <label for="first_name">First Name:</label>
+      <input
+        type="text"
+        id="first_name"
+        name="first_name"
+        value="{{ user.first_name }}"
+      /><br /><br />
+
+      <label for="last_name">Last Name:</label>
+      <input
+        type="text"
+        id="last_name"
+        name="last_name"
+        value="{{ user.last_name }}"
+      /><br /><br />
+
+      <label for="image_url">Image URL:</label>
+      <input
+        type="text"
+        id="image_url"
+        name="image_url"
+        value="{{ user.image_url }}"
+      /><br /><br />
+
+      <button type="submit">Edit Item</button><br />
+      <a href="/user-list">Go Back</a>
+    </form>
+  </body>
+</html>
