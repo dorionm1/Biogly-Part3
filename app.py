@@ -1,5 +1,5 @@
 """Blogly application."""
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 from models import db, connect_db, User
 from flask_sqlalchemy import SQLAlchemy
 
@@ -40,26 +40,6 @@ def edit_user_task(id):
 
     return redirect(f'/{id}')
 
-@app.route('/user-success')
-def success():
-    return render_template('user-success.html')
-
-# @app.route('/user-edit/<int:id>')
-# def edit_user(id):
-#     user = User.query.get_or_404(id)
-
-#     new_first = request.form.get('first_name')
-#     new_last = request.form.get('last_name')
-#     new_url = request.form.get('image_url')
-
-#     user.first_name = new_first
-#     user.last_name = new_last
-#     user.image_url = new_url
-
-#     db.session.commit()
-
-#     return render_template(f'/{id}')
-
 @app.route('/user-list')
 def show_list():
     """Shows list of all users in db"""
@@ -82,7 +62,10 @@ def create_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect('/user-success')
+    users = User.query.all()
+    latest_id= users[-1].id
+
+    return redirect(f'/{latest_id}')
 
 @app.route('/remove-user/<int:id>')
 def remove_user(id):
