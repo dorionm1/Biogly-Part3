@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Create New Post for {{ user.first_name ~ ' ' ~ user.last_name }}</h1>
+
+    <form action="/create-post/{{user.id}}" method="post">
+      <label for="title">Title:</label><br />
+      <input type="text" id="title" name="title" required /><br /><br />
+
+      <label for="content">Content:</label><br />
+      <textarea id="content" name="content" rows="4" required></textarea
+      ><br /><br />
+
+      <button type="button" id="cancelButton">Cancel</button>
+      <button type="submit" id="addButton">Add</button>
+    </form>
+  </body>
+</html>
