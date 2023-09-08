@@ -1,6 +1,6 @@
 """Blogly application."""
 from flask import Flask, render_template, request, redirect, jsonify
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, PostTag, Tag
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -20,10 +20,15 @@ def show_create_form():
     user = User
     return render_template('user-create.html', user=user)
 
+@app.route('/tag-create')
+def show_tag_form():
+    return render_template('tag-create.html')
+
 @app.route('/post-create/<int:id>')
 def show_post_form(id):
     user = User.query.get(id)
-    return render_template('post-create.html', user=user)
+    tags = Tag.query.all()
+    return render_template('post-create.html', user=user, tags=tags)
 
 @app.route('/user-edit/<int:id>')
 def edit_user_page(id):
@@ -69,6 +74,11 @@ def show_list():
     users = User.query.all()
     return render_template('user-list.html', users=users)
 
+@app.route('/tag-list')
+def show_tag_list():
+    tags = Tag.query.all()
+    return render_template('tag-list.html', tags=tags)
+
 @app.route('/<int:id>')
 def show_user_detail(id):
     """Show details of a single user"""
@@ -80,8 +90,9 @@ def show_user_detail(id):
 @app.route('/post/<int:id>')
 def show_post_detail(id):
     post = Post.query.get(id)
+    tags = post.tag.all()
 
-    return render_template('post-detail.html', post=post)  
+    return render_template('post-detail.html', post=post, tags=tags)  
 
 @app.route('/user-detail', methods=['POST'])
 def create_user():
@@ -105,11 +116,36 @@ def create_post(id):
     title = request.form["title"]
     content = request.form["content"]
 
+    selected_tags = request.form.getlist("tags")
+
+
     new_post = Post(user=user,title=title, content=content)
+    
+    for tag_id in selected_tags:
+        try:
+            tag_id = int(tag_id)  # Convert the tag_id to an integer
+            tag = Tag.query.get(tag_id)
+            if tag:
+                new_post.tags.append(tag)
+        except ValueError:
+        # Handle the case where tag_id is not a valid integer (e.g., 'Happy')
+        # You can log an error or skip this tag
+
     db.session.add(new_post)
     db.session.commit()
 
     return redirect("/user-list")
+
+@app.route('/create-tag', methods=['POST'])
+def create_tag():
+    
+    name = request.form["name"]
+
+    new_tag = Tag(name=name)
+    db.session.add(new_tag)
+    db.session.commit()
+
+    return redirect("/tag-list")
 
 @app.route('/remove-user/<int:id>')
 def remove_user(id):
@@ -118,6 +154,14 @@ def remove_user(id):
     db.session.commit()
 
     return redirect('/user-list')
+
+@app.route('/remove-tag/<int:id>')
+def remove_tag(id):
+    Tag.query.filter_by(id=id).delete()
+
+    db.session.commit()
+
+    return redirect('/tag-list')
 
 if __name__ == '__main__':
     with app.app_context():

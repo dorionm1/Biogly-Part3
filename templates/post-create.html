@@ -17,7 +17,13 @@
       ><br /><br />
 
       <button type="button" id="cancelButton">Cancel</button>
-      <button type="submit" id="addButton">Add</button>
+      <button type="submit" id="addButton">Add</button><br />
+      {% for tag in tags %}
+      <label>
+        <input type="checkbox" name="tags" value="{{tag.name}}" />
+        {{tag.name}} </label
+      ><br />
+      {% endfor %}
     </form>
   </body>
 </html>
